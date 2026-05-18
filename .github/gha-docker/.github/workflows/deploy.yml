@@ -1,9 +1,5 @@
 name: Deployment (Container)
-on:
-  push:
-    branches:
-      - main
-      - dev
+on: workflow_dispatch
 env:
   CACHE_KEY: node-deps
   MONGODB_DB_NAME: gha-demo
@@ -45,3 +41,4 @@ jobs:
           echo "MONGODB_DB_NAME: $MONGODB_DB_NAME"
           echo "MONGODB_USERNAME: $MONGODB_USERNAME"
           echo "${{ env.PORT }}"
+
