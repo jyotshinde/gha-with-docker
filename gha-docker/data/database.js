@@ -25,3 +25,5 @@ try {
 const database = client.db(dbName);
 
 export default database;
+
+# added db User 
