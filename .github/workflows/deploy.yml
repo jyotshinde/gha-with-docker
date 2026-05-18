@@ -1,68 +1,67 @@
 
-# name: Deployment (Container)
+name: Deployment (Container)
 
-# on:
-#   push:
-#     branches: [main]
+on:
+  workflow_dispatch
 
-# env:
-#   CACHE_KEY: node-deps
-#   MONGODB_DB_NAME: gha-demo
+env:
+  CACHE_KEY: node-deps
+  MONGODB_DB_NAME: gha-demo
 
-# jobs:
-#   test:
-#     environment: testing
-#     runs-on: ubuntu-latest
+jobs:
+  test:
+    environment: testing
+    runs-on: ubuntu-latest
 
-#     env:
-#       MONGODB_CONNECTION_PROTOCOL: mongodb+srv
-#       MONGODB_CLUSTER_ADDRESS: my-db.ulyt86k.mongodb.net
-#       MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
-#       MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
-#       PORT: 8077
+    env:
+      MONGODB_CONNECTION_PROTOCOL: mongodb+srv
+      MONGODB_CLUSTER_ADDRESS: my-db.ulyt86k.mongodb.net
+      MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+      PORT: 8077
 
-#     steps:
-#       - name: Get Code
-#         uses: actions/checkout@v4
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v4
 
-#       - name: Setup NodeJS
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: 20
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-#       - name: Cache dependencies
-#         uses: actions/cache@v4
-#         with:
-#           path: ~/.npm
-#           key: ${{ env.CACHE_KEY }}-${{ hashFiles('gha-docker/package-lock.json') }}
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ env.CACHE_KEY }}-${{ hashFiles('gha-docker/package-lock.json') }}
 
-#       - name: Install dependencies
-#         working-directory: ./gha-docker
-#         run: npm ci
+      - name: Install dependencies
+        working-directory: ./gha-docker
+        run: npm ci
 
-#       - name: Run server
-#         working-directory: ./gha-docker
-#         run: |
-#           npm start &
-#           npx wait-on http://localhost:$PORT
+      - name: Run server
+        working-directory: ./gha-docker
+        run: |
+          npm start &
+          npx wait-on http://localhost:$PORT
 
-#       - name: Run tests
-#         working-directory: ./gha-docker
-#         run: npm test
+      - name: Run tests
+        working-directory: ./gha-docker
+        run: npm test
 
-#       - name: Output information
-#         run: |
-#           echo "MONGODB_USERNAME: $MONGODB_USERNAME"
+      - name: Output information
+        run: |
+          echo "MONGODB_USERNAME: $MONGODB_USERNAME"
 
-#   deploy:
-#     needs: test
-#     runs-on: ubuntu-latest
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Output information
-#         env:
-#           PORT: 3000
-#         run: |
-#           echo "MONGODB_DB_NAME: $MONGODB_DB_NAME"
-#           echo "MONGODB_USERNAME: $MONGODB_USERNAME"
-#           echo "${{ env.PORT }}"
+    steps:
+      - name: Output information
+        env:
+          PORT: 3000
+        run: |
+          echo "MONGODB_DB_NAME: $MONGODB_DB_NAME"
+          echo "MONGODB_USERNAME: $MONGODB_USERNAME"
+          echo "${{ env.PORT }}"

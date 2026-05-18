@@ -1,8 +1,6 @@
-name: Deployment (Container)
+name: Docker Workflow
 
-on:
-  push:
-    branches: [main]
+on: workflow_dispatch
 
 env:
   CACHE_KEY: node-deps
