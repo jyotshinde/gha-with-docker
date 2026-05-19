@@ -23,15 +23,8 @@ jobs:
       - name: Get Code
         uses: actions/checkout@v4
 
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ env.CACHE_KEY }}-${{ hashFiles('gha-docker/package-lock.json') }}
-
-      - name: Install dependencies
-        working-directory: ./gha-docker
-        run: npm ci
+      - name: install & cache dependencies using composite action
+        uses: ./.github/actions/cached-deps
 
       - name: Run server
         working-directory: ./gha-docker

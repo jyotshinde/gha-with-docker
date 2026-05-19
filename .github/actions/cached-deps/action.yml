@@ -1,0 +1,23 @@
+name: 'install & cache dependencies'
+description: Caches dependencies for a Node.js project
+runs:
+  using: 'composite'
+  steps:
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+          path: ~/.npm
+          key: ${{ env.CACHE_KEY }}-${{ hashFiles('gha-docker/package-lock.json') }}
+
+    - name: Install dependencies
+      if: steps.cache-deps.outputs.cache-hit != 'true'
+      working-directory: ./gha-docker
+      run: npm ci
+
+      shell: bash
+      
+
+
+
+
+
